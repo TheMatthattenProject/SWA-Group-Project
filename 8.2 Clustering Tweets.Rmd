@@ -1,3 +1,10 @@
+```{r}
+rmarkdown::render(input = "<absolute_or_replative_path_of_the_Rmd_file>",
+                  output_dir = "<absolute_or_replative_path_of_the_directory_where_final_results_are_desired>",
+                  knit_root_dir = "<absolute_or_replative_path_of_the_directory_what_will_be_working_directory_during_rendering>")
+```
+
+
 ---
 title: "8.2 Clustering Tweets"
 output: word_document
@@ -12,10 +19,22 @@ knitr::opts_chunk$set(echo = TRUE)
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+ajhgfksdgkfjgskjdfgskjhdgfkj
 
 ```{r cars}
 summary(cars)
 ```
+
+
+augjagdjfjshgd
+# # Using RMarkdown
+```{r}
+x = 1 + 2
+
+```
+
+
+
 
 ## Including Plots
 
