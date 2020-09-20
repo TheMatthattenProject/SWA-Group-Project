@@ -16,6 +16,7 @@ When you click the **Knit** button a document will be generated that includes bo
 ```{r}
 tweets = readRDS("tweets.rds")
 print(tweets)
+prints("test")
 ```
 
 ## Including Plots
