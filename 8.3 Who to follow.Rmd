@@ -15,8 +15,9 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 tweets = readRDS("tweets.rds")
+library(rtweet)
 print(tweets)
-prints("test")
+tweets = get_my_timeline(n = 100, max_id = NULL, parse = TRUE, check = TRUE, token = NULL)
 ```
 
 ## Including Plots
