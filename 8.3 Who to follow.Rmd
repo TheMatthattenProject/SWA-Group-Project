@@ -15,13 +15,34 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 "retweet_retweet_count"
+key = "COghWIH9VbXOtQI6m9xrSbOVN"
+secret = "f0M4L0oMsvGpxcdb7MycEwxyyJC7Hub29hjnVUTEUO7oKeufsx"
+access_tokens = "2388475730-lZ4Yqs8Jd3XtKZZQoTOz3wcYjypHbbnHKjwAQE1"
+access_secret = "uHZHaALuELTlITgvJXR7PuG1pYGk8297RNGr8cUspO2C9"
+setup_twitter_oauth(key, secret, access_tokens, access_secret)
+
 tweets = readRDS("tweets.rds")
 print(tweets)
 library(rtweet)
+library(twitteR)
+
+#11
 attach(tweets)
 tweets[1:100, ]
-sort1.tweets <- tweets[order(retweet_retweet_count), ]
-sort1.tweets[1:100, ]
+top100.tweets <- tweets[order(retweet_count, decreasing=TRUE)[1:100] ,  ] 
+
+#12
+UsersOfTweets=users=top100.tweets[1:100, c("screen_name")]
+print(users)
+
+#13
+Users <- lookupUsers(c(UsersOfTweets))
+print(Users)
+sapply(Users, function(x) x$followersCount)
+sapply(Users, function(x) x$statusesCount)
+
+
+
 
 ```
 
