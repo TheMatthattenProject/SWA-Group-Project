@@ -22,6 +22,7 @@ tweets = readRDS("tweets.rds")
 You can also embed plots, for example:
 
 ```{r}
+library(wordcloud)
 library(twitteR)
 library(tm)
 library(SnowballC)
@@ -31,7 +32,7 @@ library(dplyr)
 set.seed(21)
 
 
-tweets = readRDS("SWA-Group-Project/tweets.rds")
+tweets = readRDS("/tweets.rds")
 
 names(tweets)
 
@@ -82,6 +83,11 @@ WeightedMatrix = TF %*% diag(IDF)
 
 w = colSums(WeightedMatrix)
 o = order(w, decreasing = TRUE)
+o = o[!is.na(o)]
+q = rowSums(TweetMatrix)
+wordcloud(CorpusTweets, random.order=FALSE,max.words = 43)
+
+
 
 
 ```
