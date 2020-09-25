@@ -15,15 +15,75 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 tweets = readRDS("tweets.rds")
-print(tweets)
 ```
 
 ## Including Plots
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(twitteR)
+library(tm)
+library(SnowballC)
+library(dplyr)
+
+
+set.seed(21)
+
+
+tweets = readRDS("SWA-Group-Project/tweets.rds")
+
+names(tweets)
+
+tweets$text
+
+wordsInTweets = strsplit(tweets$text, "[^a-zA-Z]+")
+freq.tab = table(unlist(wordsInTweets))
+print(freq.tab)
+sort(freq.tab, decreasing = TRUE)[1:20]
+
+
+CorpusTweets = Corpus(VectorSource(tweets$text))
+
+#gets rid of usernames
+CorpusTweets = tm_map(CorpusTweets, content_transformer(function(x) gsub("@(.*?)\\>", "", x)))
+
+
+#need to get rid of twitter words
+CorpusTweets = tm_map(CorpusTweets, removeWords, c("amp", "rt"))
+
+CorpusTweets = tm_map(CorpusTweets, function(x) iconv(x, to = 'UTF8', sub='byte'))
+CorpusTweets = tm_map(CorpusTweets, function(x) iconv(x, to = 'ASCII', sub=''))
+CorpusTweets = tm_map(CorpusTweets, removeNumbers)
+CorpusTweets = tm_map(CorpusTweets, removePunctuation)
+CorpusTweets = tm_map(CorpusTweets, stripWhitespace)
+CorpusTweets = tm_map(CorpusTweets, tolower)
+CorpusTweets = tm_map(CorpusTweets, removeWords, stopwords())
+CorpusTweets = tm_map(CorpusTweets, stemDocument)
+
+#gets rid of links -- Needs to be after special characters since punctuation stuffs regex up
+CorpusTweets = tm_map(CorpusTweets, content_transformer(function(x) gsub("(http)(.*?)\\>", "", x)))
+CorpusTweets[[100]]
+
+
+
+documentMatrix = DocumentTermMatrix(CorpusTweets)
+TweetMatrix = as.matrix(documentMatrix)
+
+
+n = nrow(TweetMatrix)
+
+IDF = log(n/colSums(TweetMatrix > 0))
+TF = log(TweetMatrix + 1)
+
+WeightedMatrix = TF %*% diag(IDF)
+
+
+
+w = colSums(WeightedMatrix)
+o = order(w, decreasing = TRUE)
+
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
