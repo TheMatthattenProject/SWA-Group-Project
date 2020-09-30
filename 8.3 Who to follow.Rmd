@@ -47,7 +47,8 @@ print(UsersOfTweets)
 
 #13
 #By using the "UsersOfTweets" variable set we search all of the users and gather all their data and store it in the variable set "UsersData"
-UsersData <- lookupUsers(c(UsersOfTweets))
+UsersData <- lookupUsers(UsersOfTweets)
+
 
 #Using the "sapply" function we extract the follower counts of all the users and store it in a variable set "followersCounts"
 followerCounts = sapply(UsersData, function(x) x$followersCount)
@@ -61,32 +62,8 @@ print (followerCounts)
 print (statusesCounts)
 
 #14
-
-
-
-
-
-
-expectedIndependent = function (X) {
-  n = sum (X)
-  p = rowSums(X)/sum(X)
-  q = colSums(X)/sum(X)
-  return(p %o% q * n)
-}
-
-chiSquaredStatistic = function(X, E) {
-  return(sum((X - E)^2/E))
-}
-
-E = expectedIndependent(table(statusesCounts, followerCounts))
-
-x2dist = replicate(100, )
-{
-  chiSquaredStatistic(E)
-  
-})
-
-hist(x2dist)
+User.data <- data.frame(followerCounts, statusesCounts)
+print(chisq.test(User.data))
 ```
 
 ## Including Plots
