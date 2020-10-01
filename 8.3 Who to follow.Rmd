@@ -25,30 +25,35 @@ access_tokens = "2388475730-lZ4Yqs8Jd3XtKZZQoTOz3wcYjypHbbnHKjwAQE1"
 access_secret = "uHZHaALuELTlITgvJXR7PuG1pYGk8297RNGr8cUspO2C9"
 setup_twitter_oauth(key, secret, access_tokens, access_secret)
 
-
 #11
 #Reading the tweets.rds file
 tweets = readRDS("tweets.rds")
+
 #Attaching the tweets to make it into a global variable
 attach(tweets)
-#Change the tweets that is attached to only show the top 100 tweets
-tweets[1:100, ]
-#Store the attached tweets into its own dataset and reorder the tweets to show the top 100 tweets that are tweeted.
-top100.tweets <- tweets[order(retweet_count, decreasing=TRUE)[1:100] ,] 
-#Print the top 100 tweeted tweets
-print(top100.tweets)
+
+#Storing the attached tweets into its own dataset with it now being reordered to descending
+top100 <- tweets[order(retweet_count, decreasing=TRUE)[1:100] ,] 
+
+#Getting only the retweets texts from the "top100" dataset and storing the retweets into in own variable set.
+top100.retweeted=top100[1:100, c("retweet_text")]
+
+#Removing all duplicates tweets to only show the most common tweets that were retweeted
+unq.top100Retweeted <-top100.retweeted [! duplicated( top100.retweeted) ]
+
+#Printing the top100 retweets with no duplicates
+print(unq.top100Retweeted)
 
 #12
-#By using the "top100.tweets" dataset, we store all the users that tweeted in the top 100 in a variable set
-UsersOfTweets=top100.tweets[1:100, c("screen_name")]
-#Print all the users to identify the users
+#By using the "top100" dataset, we store all the users that tweeted in the top 100 in a variable set
+UsersOfTweets=top100[1:100, c("screen_name")]
+
+#Printing all the users to identify the users
 print(UsersOfTweets)
 
-
 #13
-#By using the "UsersOfTweets" variable set we search all of the users and gather all their data and store it in the variable set "UsersData"
+#By using the "UsersOfTweets" variable data set we search all of the users and gather all their data and store it in the variable set "UsersData"
 UsersData <- lookupUsers(UsersOfTweets)
-
 
 #Using the "sapply" function we extract the follower counts of all the users and store it in a variable set "followersCounts"
 followerCounts = sapply(UsersData, function(x) x$followersCount)
@@ -56,13 +61,20 @@ followerCounts = sapply(UsersData, function(x) x$followersCount)
 #Using the "sapply" function we extract the statuses counts of all the users and store it in a variable set "statusesCounts"
 statusesCounts = sapply(UsersData, function(x) x$statusesCount)
 
-#Print the followercounts of all users
+#Printing the followercounts of all users
 print (followerCounts)
-#Print all the statuses counts of all users
+
+#Printing all the statuses counts of all users
 print (statusesCounts)
 
 #14
+#Via the use of dataframe, we use the previously saved variable data sets and use the chiq.test function to determine the relationship
 User.data <- data.frame(followerCounts, statusesCounts)
+
+#Printing the dataframe to identify the dataset to be used for the chiq.test
+print(User.data)
+
+#According to the chi-square test, the relationship between status counts and followers counts has no association as the p-value is <0.01, they are independent from each other. In this case we reject the alternative hypothesis
 print(chisq.test(User.data))
 ```
 
